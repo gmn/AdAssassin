@@ -2,6 +2,7 @@
 <html>
 <head>
 <!-- link href="style.css" rel="stylesheet" -->
+<!-- script src="german.js"></script -->
 <style type="text/css">
 
 .puff {
@@ -121,14 +122,44 @@ function randomExplosion() {
   return splodes[i];
 }
 
-function hookup_elts() {
-  var links = [].slice.apply(document.getElementsByTagName('li'));
+function hookup_elts(ename) {
+  if ( arguments.length < 1 ) ename = '*';
+  var links = [].slice.apply(document.getElementsByTagName(ename));
   for ( var i = 0; i < links.length; i++ ) {
     (function(l){
       l.onclick = function(e) {
-        blow_up(e.toElement,e.pageX,e.pageY);
+        try { 
+          if ( e.toElement )
+            blow_up(e.toElement,e.pageX,e.pageY);
+        } catch(fff) { }
       };
     })(links[i]);
+  }
+}
+
+function explode_entire_page(links) {
+  if ( arguments.length < 1 ) {
+    links = [].slice.apply(document.getElementsByTagName('li'));
+  }
+  var time_increment = 150;
+  if ( links.length > 0 )
+  {
+    // get one at random
+    var i = Math.floor(Math.random()*links.length);
+    var elt = links.splice( i, 1 )[0];
+
+    // explode it
+    //elt.onclick.call(elt);    
+    var ev = document.createEvent('MouseEvents') 
+    var r = elt.getBoundingClientRect();
+    var x = Math.abs(r.left-r.right)/2 + r.left,
+        y = Math.abs(r.top-r.bottom)/2 + r.top;
+    ev.initMouseEvent('click', true, true, window, 0, x, y, x, y, false, false, false, false, false, elt )
+    elt.dispatchEvent(ev);
+
+    //fireEvent(elt,'click');
+
+    setTimeout(function(){explode_entire_page(links)}, time_increment);
   }
 }
 
@@ -158,29 +189,40 @@ function blow_up( elt, X, Y )
   explosion.func( elt, sprite );
 }
 
+function loadTheBasket() {
+    var container = document.getElementById("basket");
+    if ( !container ) {
+      var e = document.createElement("ul");
+      e.id = "basket";
+      document.body.appendChild(e);
+      container = e;
+    }
+    var i = 0;
+    while ( i < 100 ) {
+      var e = document.createElement("li");
+      e.innerHTML = String.fromCharCode(65+i) ;
+      e.setAttribute('style', 'border: 1px solid blue; height:50px; width:50px; float:left; margin:0 0 8px 8px');
+      if ( i % 6 === 0 )
+        e.style.clear = "both";
+      container.appendChild(e);
+      ++i;
+    }
+}
+
 </script>
 </head>
 <body>
 <button onclick="dim(false);">DIM</button>
 <div id="dimmer"></div>
-<ul>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
-    <li>discard</li>
+<ul id="basket">
 </ul>
 </body>
 </html>
 <script>
-hookup_elts();
+//hookup_elts('li');
+loadTheBasket();
+hookup_elts('li');
+setTimeout( explode_entire_page, 2000 );
 </script>
 
 
