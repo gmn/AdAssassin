@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="style.css" rel="stylesheet">
+<style type="text/css">
+#dimmer {
+  background:#000;
+  opacity:0.5;
+  position:fixed; /* important to use fixed, not absolute */
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  display:none;
+  z-index:9999;
+}
+</style>
+<script>
+function dim() {
+  var dimr = document.getElementById('dimmer');
+  var disp = dimr.style.display;
+  dimr.style.display = disp === 'none' ? 'block':'none';
+  setTimeout(function(){dim()}, 142);
+}
+
+function animatePoof(elt) {
+    var bgTop = 0,
+        frame = 0,
+        frames = 6,
+        frameSize = 32,
+        frameRate = 80,
+        puff = document.getElementById('puff');
+
+    // erase elt, but leave it there for spacial reasons
+    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+
+    var animate = function(){
+        if(frame < frames){
+            puff.style.backgroundPosition = "0 "+bgTop+"px";
+            bgTop = bgTop - frameSize;
+            frame++;
+            setTimeout(animate, frameRate);
+        } else
+          elt.style.display = "none";
+    };
+    
+    animate();
+    setTimeout(function(){document.getElementById('puff').style.display="none";} , frames * frameRate);
+}
+/*
+$(function() {
+    $('li').click(function(e) {
+        var xOffset = 24;
+        var yOffset = 24;
+        $(this).fadeOut('fast');
+        $('#puff').css({
+            left: e.pageX - xOffset + 'px',
+            top: e.pageY - yOffset + 'px'
+        }).show();
+        animatePoof();
+    });
+});
+*/
+function hookup_elts() {
+  var links = [].slice.apply(document.getElementsByTagName('li'));
+  for ( var i = 0; i < links.length; i++ ) {
+    console.log( "doing " + i);
+    (function(l){
+      l.onclick = function(e) {
+        var xOffset = 24;
+        var yOffset = 24;
+        document.getElementById('puff').style.left = e.pageX - xOffset + 'px';
+        document.getElementById('puff').style.top = e.pageY - yOffset + 'px';
+        document.getElementById('puff').style.display = "block";
+        animatePoof(e.toElement);
+      };
+    })(links[i]);
+  }
+}
+
+</script>
+</head>
+<body>
+<button onclick="dim(false);">DIM</button>
+<div id="dimmer"></div>
+<div id="puff"></div>
+<ul>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+    <li>discard</li>
+</ul>
+</body>
+</html>
+<script>
+hookup_elts();
+</script>
