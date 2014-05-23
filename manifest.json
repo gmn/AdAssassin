@@ -1,0 +1,25 @@
+{
+  "name": "AdAssassin",
+  "description": "Click to make things disappear.",
+  "version": "0.1",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "http://*/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "bomb.png",
+    "default_title": "Click to make things disappear"
+  },
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "css": ["style.css"] 
+    }
+  ]
+}
