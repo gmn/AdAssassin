@@ -23,3 +23,5 @@
 
 - some links are followed, suspect script. regular <A> won't follow,
   but in Extension ON mode, NO links should be followed at all.
+
+- when Extension is activated change cursor with css directive: cursor:pointer;

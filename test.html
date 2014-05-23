@@ -1,8 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="style.css" rel="stylesheet">
+<!-- link href="style.css" rel="stylesheet" -->
 <style type="text/css">
+
+.puff {
+    cursor:pointer;
+    /*display:none;*/
+    position:absolute;
+    height:32px;
+    width:32px;
+    background: url(wvPeK.png) no-repeat;
+}
+ul{padding:0;font-family:arial}
+li{
+    list-style:none;
+    background: #eee;
+    border:1px solid #ddd;
+    cursor:pointer;
+    float:left;
+    margin:5px;
+    padding:15px;
+}
+
+.firey {
+    cursor:pointer;
+    /*display:none;*/
+    position:absolute;
+    height:64px;
+    width:64px;
+    background: url(explosion.png) no-repeat;
+}
+
 #dimmer {
   background:#000;
   opacity:0.5;
@@ -23,59 +52,110 @@ function dim() {
   setTimeout(function(){dim()}, 142);
 }
 
-function animatePoof(elt) {
+function animateFirey(elt,sprite) {
     var bgTop = 0,
+        bgLeft = 0,
         frame = 0,
-        frames = 6,
-        frameSize = 32,
-        frameRate = 80,
-        puff = document.getElementById('puff');
+        frames = 23,
+        frameSize = 64,
+        frameRate = 40;
 
     // erase elt, but leave it there for spacial reasons
     elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
 
     var animate = function(){
         if(frame < frames){
-            puff.style.backgroundPosition = "0 "+bgTop+"px";
-            bgTop = bgTop - frameSize;
+            var mod = frame % 5;
+            var div = Math.floor(frame / 5);
+            if ( mod === 0 ) {
+                bgTop = div * -frameSize;
+                bgLeft = 0;
+            }
+            sprite.style.backgroundPosition = bgLeft+"px "+bgTop+"px";
+            bgLeft -= frameSize;
             frame++;
             setTimeout(animate, frameRate);
-        } else
+        } else {
           elt.style.display = "none";
+          sprite.parentElement.removeChild(sprite);
+        }
     };
     
     animate();
-    setTimeout(function(){document.getElementById('puff').style.display="none";} , frames * frameRate);
+
+    //setTimeout(function(){sprite.style.display="none";} , frames * frameRate);
 }
-/*
-$(function() {
-    $('li').click(function(e) {
-        var xOffset = 24;
-        var yOffset = 24;
-        $(this).fadeOut('fast');
-        $('#puff').css({
-            left: e.pageX - xOffset + 'px',
-            top: e.pageY - yOffset + 'px'
-        }).show();
-        animatePoof();
-    });
-});
-*/
+
+function animatePoof(elt,sprite) {
+    var bgTop = 0,
+        frame = 0,
+        frames = 6,
+        frameSize = 32,
+        frameRate = 80;
+
+    // erase elt, but leave it there for spacial reasons
+    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+
+    var animate = function(){
+        if(frame < frames){
+            sprite.style.backgroundPosition = "0 "+bgTop+"px";
+            bgTop = bgTop - frameSize;
+            frame++;
+            setTimeout(animate, frameRate);
+        } else {
+          elt.style.display = "none";
+          sprite.parentElement.removeChild(sprite);
+        }
+    };
+    
+    animate();
+
+    //setTimeout(function(){sprite.style.display="none";} , frames * frameRate);
+}
+
+var splodes = [];
+splodes.push( {func:animatePoof,h:32,w:32,css:"puff"} );
+splodes.push( {func:animateFirey,h:64,w:64,css:"firey"} );
+function randomExplosion() {
+  var i = Math.floor(Math.random()*splodes.length);
+  return splodes[i];
+}
+
 function hookup_elts() {
   var links = [].slice.apply(document.getElementsByTagName('li'));
   for ( var i = 0; i < links.length; i++ ) {
-    console.log( "doing " + i);
     (function(l){
       l.onclick = function(e) {
-        var xOffset = 24;
-        var yOffset = 24;
-        document.getElementById('puff').style.left = e.pageX - xOffset + 'px';
-        document.getElementById('puff').style.top = e.pageY - yOffset + 'px';
-        document.getElementById('puff').style.display = "block";
-        animatePoof(e.toElement);
+        blow_up(e.toElement,e.pageX,e.pageY);
       };
     })(links[i]);
   }
+}
+
+function blow_up( elt, X, Y ) 
+{
+  // attach sprite to body
+  var sprite = document.createElement('div');
+  document.body.appendChild(sprite);
+
+  // get an explosion animation
+  var explosion = randomExplosion();
+
+  // set class
+  sprite.className = explosion.css;
+  sprite.setAttribute('class',explosion.css);
+
+  // set position
+  var xOffset = explosion.w / 2;
+  var yOffset = explosion.h / 2;
+  sprite.style.left = X - xOffset + 'px';
+  sprite.style.top = Y - yOffset + 'px';
+
+  // show it
+  //sprite.style.display = "block";
+
+  // 
+  explosion.func( elt, sprite );
 }
 
 </script>
@@ -83,7 +163,6 @@ function hookup_elts() {
 <body>
 <button onclick="dim(false);">DIM</button>
 <div id="dimmer"></div>
-<div id="puff"></div>
 <ul>
     <li>discard</li>
     <li>discard</li>
@@ -103,3 +182,5 @@ function hookup_elts() {
 <script>
 hookup_elts();
 </script>
+
+
