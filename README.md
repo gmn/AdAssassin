@@ -1,14 +1,13 @@
-- [X] 3-5 frame animation sprite placed in location of removed element,
-  which uses setTimeout() and removes itself after animation as played.
-  puff of smoke; or fast explosion = fire + smoke
-  X get location of elt removing; use that to calculate location of sprite
 
-- Explosion sprite is working, but for non-generalized case. Need to
-  re-write it to:
-    X have multiple running at one time, possibly hundreds
-    X get a better explosion animation; something with a couple frames of fire; then couple frames smoke
-    - be applicable to any element
-      (right now is being attached to event listener ahead of time. Instead need to attach globally to body)
+- background.html that drops down and has checkbox.checked() "Show explosions", <button value="Blow up entire page">
+  This indicates when plugin is ON or OFF. It's ON when it's SHOWING.
+
+- library method to randomize an array in place. 'var a=[1,2,3,4];randomize(a);a' --> [2,1,4,3]
+- get content elements first: <A> <LI> <P> <HR> <TD><H1><h2><h3><h4><h5><span>, then get structure: <TABLE><DIV>, 
+  then the rest. Sort in such a way that [RANDOMIZED_CONTENT, RANDOMIZED_STRUCTURE, REST_OF_PAGE], 
+  then blow the array up in order
+
+- Rewrite Explosion Sprite so that it's not attached to onclick() event listener ahead of time
 
 - popup notification div which alerts user extension is on.
   transparent; white text on black; rounded corners w/ rad: 10px

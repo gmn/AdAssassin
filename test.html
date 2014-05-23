@@ -4,9 +4,12 @@
 <!-- link href="style.css" rel="stylesheet" -->
 <!-- script src="german.js"></script -->
 <style type="text/css">
+* {
+cursor: url(bomb.png), auto;
+}
 
 .puff {
-    cursor:pointer;
+    /* cursor:pointer; */
     /*display:none;*/
     position:absolute;
     height:32px;
@@ -18,19 +21,32 @@ li{
     list-style:none;
     background: #eee;
     border:1px solid #ddd;
-    cursor:pointer;
+    /* cursor:pointer; */
     float:left;
     margin:5px;
     padding:15px;
 }
 
 .firey {
-    cursor:pointer;
+    /* cursor:pointer; */
     /*display:none;*/
     position:absolute;
     height:64px;
     width:64px;
     background: url(explosion.png) no-repeat;
+}
+.dirty {
+    position:absolute;
+    height:128px;
+    width:128px;
+    background: url(explosion_1_38_128_corrected.png) no-repeat;
+}
+
+.smoke {
+    position:absolute;
+    height:128px;
+    width:128px;
+    background: url(smoke_1_40_128_corrected.png) no-repeat;
 }
 
 #dimmer {
@@ -53,21 +69,121 @@ function dim() {
   setTimeout(function(){dim()}, 142);
 }
 
-function animateFirey(elt,sprite) {
+function spawnSmoke(elt,sprite,X,Y) {
+    var bgTop = 0,
+        bgLeft = 0,
+        frame = 0,
+        frames = 37,
+        rowLength = 8,
+        frameSize = 128,
+        frameRate = 40;
+
+    // set sprite class
+    sprite.className = 'smoke';
+    sprite.setAttribute('class','smoke');
+
+    // set sprite position
+    var xOffset = frameSize / 2;
+    var yOffset = frameSize / 2;
+    sprite.style.left = X - xOffset + 'px';
+    sprite.style.top = Y - yOffset + 'px';
+
+    // erase elt, but leave it there for spacial reasons
+    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+
+    var animate = function() {
+        if ( frame < frames ) {
+            var mod = frame % rowLength;
+            var div = Math.floor(frame / rowLength);
+            if ( mod === 0 ) {
+                bgTop = div * -frameSize;
+                bgLeft = 0;
+            }
+            sprite.style.backgroundPosition = bgLeft+"px "+bgTop+"px";
+console.log('frame: '+frame+' '+sprite.style.backgroundPosition);
+            bgLeft -= frameSize;
+            frame++;
+            setTimeout(animate, frameRate);
+        } else {
+          elt.style.display = "none";
+          sprite.parentElement.removeChild(sprite);
+        }
+    };
+    
+    animate();
+}
+
+function spawnDirtyFire(elt,sprite,X,Y) {
+    var bgTop = 0,
+        bgLeft = 0,
+        frame = 16,
+        frames = 37,
+        rowLength = 8,
+        frameSize = 128,
+        frameRate = 40;
+
+    // set sprite class
+    sprite.className = 'dirty';
+    sprite.setAttribute('class','dirty');
+
+    // set sprite position
+    var xOffset = frameSize / 2;
+    var yOffset = frameSize / 2;
+    sprite.style.left = X - xOffset + 'px';
+    sprite.style.top = Y - yOffset + 'px';
+
+    // erase elt, but leave it there for spacial reasons
+    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+
+    var animate = function() {
+        if ( frame < frames ) {
+            var mod = frame % rowLength;
+            var div = Math.floor(frame / rowLength);
+            if ( mod === 0 ) {
+                bgTop = div * -frameSize;
+                bgLeft = 0;
+            }
+            sprite.style.backgroundPosition = bgLeft+"px "+bgTop+"px";
+console.log('frame: '+frame+' '+sprite.style.backgroundPosition);
+            bgLeft -= frameSize;
+            frame++;
+            setTimeout(animate, frameRate);
+        } else {
+          elt.style.display = "none";
+          sprite.parentElement.removeChild(sprite);
+        }
+    };
+    
+    animate();
+}
+
+function spawnFireball(elt,sprite, X, Y) {
     var bgTop = 0,
         bgLeft = 0,
         frame = 0,
         frames = 23,
+        rowLength = 5;
         frameSize = 64,
         frameRate = 40;
+
+
+    // set sprite class
+    sprite.className = 'firey';
+    sprite.setAttribute('class','firey');
+
+    // set sprite position
+    var xOffset = frameSize / 2;
+    var yOffset = frameSize / 2;
+    sprite.style.left = X - xOffset + 'px';
+    sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
     elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
 
     var animate = function(){
         if(frame < frames){
-            var mod = frame % 5;
-            var div = Math.floor(frame / 5);
+            var mod = frame % rowLength;
+            var div = Math.floor(frame / rowLength);
             if ( mod === 0 ) {
                 bgTop = div * -frameSize;
                 bgLeft = 0;
@@ -83,16 +199,24 @@ function animateFirey(elt,sprite) {
     };
     
     animate();
-
-    //setTimeout(function(){sprite.style.display="none";} , frames * frameRate);
 }
 
-function animatePoof(elt,sprite) {
+function spawnPuff(elt,sprite,X,Y) {
     var bgTop = 0,
         frame = 0,
         frames = 6,
         frameSize = 32,
         frameRate = 80;
+
+    // set sprite class
+    sprite.className = 'puff';
+    sprite.setAttribute('class','puff');
+
+    // set sprite position
+    var xOffset = frameSize / 2;
+    var yOffset = frameSize / 2;
+    sprite.style.left = X - xOffset + 'px';
+    sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
     elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
@@ -110,13 +234,13 @@ function animatePoof(elt,sprite) {
     };
     
     animate();
-
-    //setTimeout(function(){sprite.style.display="none";} , frames * frameRate);
 }
 
 var splodes = [];
-splodes.push( {func:animatePoof,h:32,w:32,css:"puff"} );
-splodes.push( {func:animateFirey,h:64,w:64,css:"firey"} );
+splodes.push( spawnPuff );
+splodes.push( spawnFireball );
+splodes.push( spawnDirtyFire );
+splodes.push( spawnSmoke );
 function randomExplosion() {
   var i = Math.floor(Math.random()*splodes.length);
   return splodes[i];
@@ -172,21 +296,8 @@ function blow_up( elt, X, Y )
   // get an explosion animation
   var explosion = randomExplosion();
 
-  // set class
-  sprite.className = explosion.css;
-  sprite.setAttribute('class',explosion.css);
-
-  // set position
-  var xOffset = explosion.w / 2;
-  var yOffset = explosion.h / 2;
-  sprite.style.left = X - xOffset + 'px';
-  sprite.style.top = Y - yOffset + 'px';
-
-  // show it
-  //sprite.style.display = "block";
-
-  // 
-  explosion.func( elt, sprite );
+  // run it
+  explosion( elt, sprite, X, Y );
 }
 
 function loadTheBasket() {
@@ -213,6 +324,7 @@ function loadTheBasket() {
 </head>
 <body>
 <button onclick="dim(false);">DIM</button>
+<button onclick="explode_entire_page();">Blow Up the Entire Page</button>
 <div id="dimmer"></div>
 <ul id="basket">
 </ul>
@@ -222,7 +334,7 @@ function loadTheBasket() {
 //hookup_elts('li');
 loadTheBasket();
 hookup_elts('li');
-setTimeout( explode_entire_page, 2000 );
+//setTimeout( explode_entire_page, 2000 );
 </script>
 
 
