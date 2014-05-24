@@ -76,7 +76,7 @@ function spawnSmoke(elt,sprite,X,Y) {
         frames = 37,
         rowLength = 8,
         frameSize = 128,
-        frameRate = 40;
+        frameRate = 54;
 
     // set sprite class
     sprite.className = 'smoke';
@@ -84,12 +84,14 @@ function spawnSmoke(elt,sprite,X,Y) {
 
     // set sprite position
     var xOffset = frameSize / 2;
-    var yOffset = frameSize / 2;
+    var yOffset = frameSize / 1.33;
     sprite.style.left = X - xOffset + 'px';
     sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
-    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    elt.style.borderColor = elt.style.color = elt.style.backgroundColor = '#fff';
+    elt.setAttribute('allowtransparency', 'true');
+    elt.style.opacity = '0.0';
 
     var animate = function() {
         if ( frame < frames ) {
@@ -100,7 +102,6 @@ function spawnSmoke(elt,sprite,X,Y) {
                 bgLeft = 0;
             }
             sprite.style.backgroundPosition = bgLeft+"px "+bgTop+"px";
-console.log('frame: '+frame+' '+sprite.style.backgroundPosition);
             bgLeft -= frameSize;
             frame++;
             setTimeout(animate, frameRate);
@@ -120,7 +121,7 @@ function spawnDirtyFire(elt,sprite,X,Y) {
         frames = 37,
         rowLength = 8,
         frameSize = 128,
-        frameRate = 60;
+        frameRate = 70;
 
     // set sprite class
     sprite.className = 'dirty';
@@ -133,7 +134,8 @@ function spawnDirtyFire(elt,sprite,X,Y) {
     sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
-    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    //elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    elt.style.borderColor = elt.style.color = elt.style.backgroundColor = '#fff';
 
     var animate = function() {
         if ( frame < frames ) {
@@ -144,7 +146,6 @@ function spawnDirtyFire(elt,sprite,X,Y) {
                 bgLeft = 0;
             }
             sprite.style.backgroundPosition = bgLeft+"px "+bgTop+"px";
-console.log('frame: '+frame+' '+sprite.style.backgroundPosition);
             bgLeft -= frameSize;
             frame++;
             setTimeout(animate, frameRate);
@@ -178,7 +179,8 @@ function spawnFireball(elt,sprite, X, Y) {
     sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
-    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    //elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    elt.style.borderColor = elt.style.color = elt.style.backgroundColor = '#fff';
 
     var animate = function(){
         if(frame < frames){
@@ -206,7 +208,7 @@ function spawnPuff(elt,sprite,X,Y) {
         frame = 0,
         frames = 6,
         frameSize = 32,
-        frameRate = 80;
+        frameRate = 100;
 
     // set sprite class
     sprite.className = 'puff';
@@ -219,7 +221,8 @@ function spawnPuff(elt,sprite,X,Y) {
     sprite.style.top = Y - yOffset + 'px';
 
     // erase elt, but leave it there for spacial reasons
-    elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    //elt.setAttribute( 'style', 'border:none;color:#fff;background-color:#fff;background:#fff;' );
+    elt.style.borderColor = elt.style.color = elt.style.backgroundColor = '#fff';
 
     var animate = function(){
         if(frame < frames){

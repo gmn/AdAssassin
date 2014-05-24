@@ -4,10 +4,16 @@ try {
   if ( !domkiller ) 
     var domkiller = new AdAssassin();
 } catch(e) {
-    var domkiller = new AdAssassin();
+    try { 
+      var domkiller = new AdAssassin();
+    } catch(f) { }
 }
 
-var result = domkiller.toggle();
-console.log( "domkiller is: " + result );
+try {
+  var result = domkiller.toggle();
+  console.log( "domkiller is: " + result );
+} catch(e) {
+  console.log( "domkiller not wired yet" );
+}
 
 

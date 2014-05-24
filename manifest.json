@@ -14,12 +14,13 @@
   "browser_action": {
     "default_icon": "bomb.png",
     "default_title": "Click to make things disappear"
+    /*"default_popup": "popup.html"*/
   },
   "manifest_version": 2,
   "content_scripts": [
     {
       "matches": ["http://*/*","https://*/*"],
-      "js": ["content_scripts.js"]
+      "js": ["ad_assassin.js"]
       /* "css": ["style.css"] */
     }
   ]
