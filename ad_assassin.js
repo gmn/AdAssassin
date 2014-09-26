@@ -37,6 +37,7 @@ function AdAssassin() {
   }
 
   this.noned = [];
+  this.cursor_orig = '';
 
   this.turn_on = function () 
   {
@@ -59,11 +60,16 @@ function AdAssassin() {
             }
         }
     };
+
+    this.cursor_orig = document.style.cursor;
+    document.style.cursor = 'url(bomb.png), auto;';
+
     return "ON";
   }
 
   this.turn_off = function () {
     document.body.onclick = document.body.onkeydown = null;
+    document.style.cursor = this.cursor_orig;
     return "OFF";
   }
   this.toggle = function () {

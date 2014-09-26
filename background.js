@@ -8,6 +8,11 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 */
 
+
+// runs when extension button is pressed
+
+
+
 var i = 0;
 function updateIcon() 
 {
@@ -21,12 +26,20 @@ function updateIcon()
     chrome.browserAction.disable();
 */
 
-  chrome.tabs.executeScript( null, {file:"killer.js"} );
+  //chrome.tabs.executeScript( null, {file:"killer.js"} );
 
   var bomb = ( i % 2 ) ? "bomb-on.png" : "bomb.png";
+
   chrome.browserAction.setIcon({path:bomb});
+
+  if ( i % 2 )
+    chrome.tabs.executeScript( null, {file: "domkiller.turn_on.js"} );
+  else
+    chrome.tabs.executeScript( null, {file: "domkiller.turn_off.js"} );
+
 }
-chrome.browserAction.setPopup({popup:"popup.html"});
+
+//chrome.browserAction.setPopup({popup:"popup.html"});
 chrome.browserAction.onClicked.addListener(updateIcon);
-updateIcon();
+//updateIcon();
 
